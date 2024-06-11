@@ -1,0 +1,18 @@
+# Ignore node modules
+frontend/node_modules/
+
+# Ignore Maven/Gradle build directories
+backend/target/
+backend/.mvn/
+backend/.gradle/
+
+# Ignore IDE configuration files
+.idea/
+.vscode/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
