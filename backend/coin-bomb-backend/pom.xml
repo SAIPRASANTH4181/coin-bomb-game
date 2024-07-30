@@ -28,6 +28,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
+    
 
     <!-- H2 Database: In-memory database for development and testing purposes -->
     <!-- Replace with your actual database (e.g., MySQL, PostgreSQL) for production -->
@@ -59,7 +60,15 @@
         <artifactId>spring-boot-starter-test</artifactId>
         <scope>test</scope>
     </dependency>
+	
+	<!-- MySQL Connector: JDBC driver for MySQL -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.32</version>
+    </dependency>
 
+	
     <!-- Additional Dependencies -->
     <!-- Add other dependencies as needed, such as for validation, logging, etc. -->
 </dependencies>
