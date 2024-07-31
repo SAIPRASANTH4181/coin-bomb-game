@@ -2,16 +2,14 @@ package com.example.coin_bomb_backend.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.coin_bomb_backend.DTO.SquareRevealDTO;
 import com.example.coin_bomb_backend.model.Game;
 import com.example.coin_bomb_backend.model.Square;
 import com.example.coin_bomb_backend.repository.GameRepository;
@@ -58,4 +56,20 @@ public class GameService {
 	    gameRepository.save(game);
 	}
 	
+
+    public SquareRevealDTO revealSquare(Long gameId, int x, int y) {
+        Game game = gameRepository.findById(gameId)
+            .orElseThrow(() -> new RuntimeException("Game not found"));
+        Square square = game.getSquares().stream()
+            .filter(s -> s.getX() == x && s.getY() == y)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Square not found"));
+        square.setRevealed(true);
+        squareRepository.save(square);
+        String content = square.isBomb() ? "Bomb" : "Coin";
+        return new SquareRevealDTO(x, y, square.isRevealed(), content);
+    }
+	 
+	 
+	 
 }

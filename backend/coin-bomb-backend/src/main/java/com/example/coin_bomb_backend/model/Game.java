@@ -61,6 +61,11 @@ public class Game {
 	public String toString() {
 		return "Game [Id=" + Id + ", width=" + width + ", height=" + height + "]";
 	}
+
+	public Long getId() {
+		return Id;
+	}
+
 	
 	
 	

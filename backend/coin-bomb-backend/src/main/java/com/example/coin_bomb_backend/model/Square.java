@@ -24,6 +24,10 @@ public class Square {
     private Game game;
     
     
+	public Long getId() {
+		return id;
+	}
+	
 	public Game getGame() {
 		return game;
 	}

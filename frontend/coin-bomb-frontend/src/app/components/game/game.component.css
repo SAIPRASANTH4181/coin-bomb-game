@@ -1,0 +1,22 @@
+.game-grid {
+    display: inline-block;
+    border: 1px solid #000;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .square {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .square.revealed {
+    background-color: #a4ba14;
+  }
