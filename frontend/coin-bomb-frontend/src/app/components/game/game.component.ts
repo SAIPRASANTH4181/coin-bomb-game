@@ -16,6 +16,8 @@ export class GameComponent implements OnInit {
   gameWidth:number=0;
   gameHeight:number=0;
   grid: GridSquare[][] | null = null;
+  gameStatus: string = 'IN_PROGRESS';
+
   constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
@@ -28,6 +30,7 @@ export class GameComponent implements OnInit {
         this.gameId = response.id; // Set the gameId from the response
         this.gameWidth=response.width; 
         this.gameHeight=response.height; 
+        this.gameStatus = 'IN_PROGRESS';
         this.createGrid();
       },
       error: (error) => console.error('Error initializing game', error)
@@ -44,13 +47,15 @@ export class GameComponent implements OnInit {
   if (this.grid && this.gameId && 
       x >= 0 && x < this.grid.length && 
       y >= 0 && y < this.grid[x].length &&
-      !this.grid[x][y].revealed) {
+      !this.grid[x][y].revealed &&
+      this.gameStatus === 'IN_PROGRESS') {
         
     this.gameService.revealSquare(this.gameId, x, y).subscribe({
       next: (response: SquareRevealDTO) => {
         if (this.grid && this.grid[x] && this.grid[x][y]) {
           this.grid[x][y].revealed = true;
           this.grid[x][y].content = response.content;
+          this.gameStatus = response.gameStatus;
         }
       },
       error: (error) => console.error('Error revealing square', error)
@@ -58,5 +63,8 @@ export class GameComponent implements OnInit {
   }
 }
 
+restartGame(): void {
+    this.initializeGame();
+}
 
 }
