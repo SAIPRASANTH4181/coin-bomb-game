@@ -1,24 +1,27 @@
 <div class="game-container">
     <h1>Coin Bomb Game</h1>
     <div class="status-bar">
-        <p *ngIf="gameStatus === 'IN_PROGRESS'">Find all coins! Avoid the bombs.</p>
-        <p *ngIf="gameStatus === 'WON'" class="win-msg">🎉 You Won! 🎉</p>
-        <p *ngIf="gameStatus === 'LOST'" class="lose-msg">💥 Game Over! 💥</p>
-        <button *ngIf="gameStatus !== 'IN_PROGRESS'" (click)="restartGame()">Restart Game</button>
+        <p *ngIf="isLoading">Loading game...</p>
+        <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
+
+        <div *ngIf="!isLoading && !errorMessage">
+            <p *ngIf="gameStatus === 'IN_PROGRESS' && grid">Find all coins! Avoid the bombs.</p>
+            <p *ngIf="gameStatus === 'WON'" class="win-msg">🎉 You Won! 🎉</p>
+            <p *ngIf="gameStatus === 'LOST'" class="lose-msg">💥 Game Over! 💥</p>
+        </div>
+
+        <button *ngIf="!grid && !isLoading" (click)="initializeGame()">Start Game</button>
+        <button *ngIf="grid && gameStatus !== 'IN_PROGRESS'" (click)="restartGame()">Restart Game</button>
     </div>
 
     <div class="game-grid" *ngIf="grid">
         <div class="row" *ngFor="let row of grid; let x = index">
-            <div class="square" 
-                *ngFor="let square of row; let y = index" 
-                (click)="onSquareClick(x, y)"
-                [class.revealed]="square.revealed"
-                [class.bomb]="square.content === 'Bomb'"
-                [class.coin]="square.content === 'Coin'"
-            >
-            <span *ngIf="square.revealed">
-                {{ square.content === 'Bomb' ? '💣' : (square.content === 'Coin' ? '🪙' : '') }}
-            </span>
+            <div class="square" *ngFor="let square of row; let y = index" (click)="onSquareClick(x, y)"
+                [class.revealed]="square.revealed" [class.bomb]="square.content === 'Bomb'"
+                [class.coin]="square.content === 'Coin'">
+                <span *ngIf="square.revealed">
+                    {{ square.content === 'Bomb' ? '💣' : (square.content === 'Coin' ? '🪙' : '') }}
+                </span>
             </div>
         </div>
     </div>
