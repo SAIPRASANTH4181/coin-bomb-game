@@ -25,6 +25,55 @@ public class Game {
     @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
     private GameStatus status = GameStatus.IN_PROGRESS;
 
+    @jakarta.persistence.ManyToOne
+    @jakarta.persistence.JoinColumn(name = "player_id")
+    private Player player;
+
+    private int currentLevel = 1;
+    private int score = 0;
+    private int lives = 3;
+    private int totalBombs;
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public int getTotalBombs() {
+        return totalBombs;
+    }
+
+    public void setTotalBombs(int totalBombs) {
+        this.totalBombs = totalBombs;
+    }
+
     public GameStatus getStatus() {
         return status;
     }
