@@ -19,7 +19,7 @@ import com.example.coin_bomb_backend.service.GameService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200/") // Allow requests from this origin
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost"}) // Allow requests from dev and docker origins
 public class GameController {
 	
 	@Autowired
