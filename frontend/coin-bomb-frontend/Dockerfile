@@ -22,5 +22,8 @@ FROM nginx:alpine
 # Copy the built files from the previous stage
 COPY --from=build /app/dist/coin-bomb-frontend /usr/share/nginx/html
 
+# Copy custom NGINX configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose the application port
 EXPOSE 80
