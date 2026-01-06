@@ -13,58 +13,67 @@ export class GameComponent implements OnInit {
   level: number = 1; // Default level
   gameData: any; // To store game data 
   gameId: number = 0; // Initialize with a default value
-  gameWidth:number=0;
-  gameHeight:number=0;
+  gameWidth: number = 0;
+  gameHeight: number = 0;
   grid: GridSquare[][] | null = null;
   gameStatus: string = 'IN_PROGRESS';
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
   constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
     this.initializeGame();
   }
-  
+
   initializeGame(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
     this.gameService.initializeGame().subscribe({
       next: (response) => {
-        this.gameId = response.id; // Set the gameId from the response
-        this.gameWidth=response.width; 
-        this.gameHeight=response.height; 
+        this.gameId = response.id;
+        this.gameWidth = response.width;
+        this.gameHeight = response.height;
         this.gameStatus = 'IN_PROGRESS';
         this.createGrid();
+        this.isLoading = false;
       },
-      error: (error) => console.error('Error initializing game', error)
+      error: (error) => {
+        console.error('Error initializing game', error);
+        this.errorMessage = 'Could not start game. Is the backend running?';
+        this.isLoading = false;
+      }
     });
   }
 
   createGrid(): void {
-    this.grid = Array(this.gameHeight).fill(null).map(() => 
+    this.grid = Array(this.gameHeight).fill(null).map(() =>
       Array(this.gameWidth).fill(null).map(() => ({ revealed: false, content: '' }))
     );
   }
-  
+
   onSquareClick(x: number, y: number): void {
-  if (this.grid && this.gameId && 
-      x >= 0 && x < this.grid.length && 
+    if (this.grid && this.gameId &&
+      x >= 0 && x < this.grid.length &&
       y >= 0 && y < this.grid[x].length &&
       !this.grid[x][y].revealed &&
       this.gameStatus === 'IN_PROGRESS') {
-        
-    this.gameService.revealSquare(this.gameId, x, y).subscribe({
-      next: (response: SquareRevealDTO) => {
-        if (this.grid && this.grid[x] && this.grid[x][y]) {
-          this.grid[x][y].revealed = true;
-          this.grid[x][y].content = response.content;
-          this.gameStatus = response.gameStatus;
-        }
-      },
-      error: (error) => console.error('Error revealing square', error)
-    });
-  }
-}
 
-restartGame(): void {
+      this.gameService.revealSquare(this.gameId, x, y).subscribe({
+        next: (response: SquareRevealDTO) => {
+          if (this.grid && this.grid[x] && this.grid[x][y]) {
+            this.grid[x][y].revealed = true;
+            this.grid[x][y].content = response.content;
+            this.gameStatus = response.gameStatus;
+          }
+        },
+        error: (error) => console.error('Error revealing square', error)
+      });
+    }
+  }
+
+  restartGame(): void {
     this.initializeGame();
-}
+  }
 
 }
