@@ -22,6 +22,17 @@ public class Game {
 	@OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Square> squares;
 
+    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+    private GameStatus status = GameStatus.IN_PROGRESS;
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
 	
 	
 	public int getWidth() {
