@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost"}) // Allow requests from dev and docker origins
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost", "https://gridluck.netlify.app"}) // Allow requests from dev, docker, and Netlify origins
 public class GameController {
 	
 	@Autowired
