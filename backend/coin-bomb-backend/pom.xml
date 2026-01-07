@@ -68,6 +68,13 @@
         <version>8.0.32</version>
     </dependency>
 
+    <!-- PostgreSQL Connector: JDBC driver for PostgreSQL -->
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
 	
     <!-- Additional Dependencies -->
     <!-- Add other dependencies as needed, such as for validation, logging, etc. -->
