@@ -1,0 +1,9 @@
+[build]
+  # Base directory: The folder containing package.json
+  base = "frontend/coin-bomb-frontend"
+  
+  # Build command
+  command = "npm run build"
+  
+  # Publish directory: The folder where index.html ends up
+  publish = "dist/coin-bomb-frontend"
