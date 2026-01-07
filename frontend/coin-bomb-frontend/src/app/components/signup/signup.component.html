@@ -1,1 +1,67 @@
-<p>signup works!</p>
+<div class="auth-container">
+  <div class="auth-form">
+    <h2>Sign Up</h2>
+    <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="username"
+          required
+          minlength="3"
+          maxlength="20"
+          #usernameInput="ngModel"
+          class="form-control"
+          [class.is-invalid]="usernameInput.invalid && usernameInput.touched"
+          (input)="checkUsernameAvailability()"
+        />
+        <div *ngIf="usernameInput.invalid && usernameInput.touched" class="invalid-feedback">
+          <div *ngIf="usernameInput.errors?.['required']">Username is required</div>
+          <div *ngIf="usernameInput.errors?.['minlength']">Username must be at least 3 characters</div>
+          <div *ngIf="usernameInput.errors?.['maxlength']">Username must be at most 20 characters</div>
+        </div>
+        <div *ngIf="usernameInput.valid && usernameInput.touched" class="valid-feedback">
+          <div *ngIf="usernameAvailable === true" class="text-success">Username is available</div>
+          <div *ngIf="usernameAvailable === false" class="text-danger">Username is already taken</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          maxlength="40"
+          #passwordInput="ngModel"
+          class="form-control"
+          [class.is-invalid]="passwordInput.invalid && passwordInput.touched"
+        />
+        <div *ngIf="passwordInput.invalid && passwordInput.touched" class="invalid-feedback">
+          <div *ngIf="passwordInput.errors?.['required']">Password is required</div>
+          <div *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters</div>
+          <div *ngIf="passwordInput.errors?.['maxlength']">Password must be at most 40 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" [disabled]="signupForm.invalid || isSignUpFailed || usernameAvailable === false">
+          Sign Up
+        </button>
+      </div>
+
+      <div *ngIf="isSignUpFailed" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <p>Already have an account? <a routerLink="/signin">Login</a></p>
+      </div>
+    </form>
+  </div>
+</div>

@@ -6,6 +6,10 @@
         <input type="text" [(ngModel)]="playerName" placeholder="Enter your name" class="name-input">
         <button (click)="startGame()">Start Playing</button>
         <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
+        <p class="auth-links">
+            <a routerLink="/signin">Login</a> | 
+            <a routerLink="/signup">Sign Up</a>
+        </p>
     </div>
 
     <!-- Game HUD -->
@@ -27,6 +31,9 @@
             <span class="value hearts">
                 <span *ngFor="let i of [].constructor(lives)">❤️</span>
             </span>
+        </div>
+        <div class="stat">
+            <button (click)="logout()" class="btn btn-secondary">Logout</button>
         </div>
     </div>
 

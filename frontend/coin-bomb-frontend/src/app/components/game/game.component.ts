@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import { GameStateDTO, GridSquare, SquareRevealDTO } from 'src/app/models/game-and-square-dtos.interface';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+import { GameStateDTO, GridSquare, SquareRevealDTO, GameInitDTO } from 'src/app/models/game-and-square-dtos.interface';
 
 @Component({
   selector: 'app-game',
@@ -27,10 +29,20 @@ export class GameComponent implements OnInit {
   lives: number = 3;
   totalBombs: number = 0;
 
-  constructor(private gameService: GameService) { }
+  constructor(
+    private gameService: GameService,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    // Wait for player name
+    // Check if user is already logged in
+    const user = this.authService.getUser();
+    if (user) {
+      this.playerName = user.username;
+      this.isPlayerNameSet = true;
+      this.initializeGame();
+    }
   }
 
   startGame(): void {
@@ -46,7 +58,7 @@ export class GameComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.gameService.initializeGame(this.playerName).subscribe({
-      next: (response) => {
+      next: (response: GameInitDTO) => {
         this.gameId = response.id;
         this.gameWidth = response.width;
         this.gameHeight = response.height;
@@ -54,7 +66,7 @@ export class GameComponent implements OnInit {
         this.createGrid();
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error initializing game', error);
         this.errorMessage = 'Could not start game. Is the backend running?';
         this.isLoading = false;
@@ -97,7 +109,7 @@ export class GameComponent implements OnInit {
             this.updateGameState();
           }
         },
-        error: (error) => console.error('Error revealing square', error)
+        error: (error: any) => console.error('Error revealing square', error)
       });
     }
   }
@@ -105,14 +117,14 @@ export class GameComponent implements OnInit {
   nextLevel(): void {
     this.isLoading = true;
     this.gameService.nextLevel(this.gameId).subscribe({
-      next: (response) => {
+      next: (response: GameInitDTO) => {
         this.gameWidth = response.width;
         this.gameHeight = response.height;
         this.createGrid();
         this.updateGameState();
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.isLoading = false;
       }
@@ -121,5 +133,22 @@ export class GameComponent implements OnInit {
 
   restartGame(): void {
     this.initializeGame();
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.isPlayerNameSet = false;
+        this.playerName = '';
+        this.router.navigate(['/signin']);
+      },
+      error: (err: any) => {
+        console.error('Logout error', err);
+        // Even if there's an error, still redirect to login page
+        this.isPlayerNameSet = false;
+        this.playerName = '';
+        this.router.navigate(['/signin']);
+      }
+    });
   }
 }
