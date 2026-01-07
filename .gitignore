@@ -16,3 +16,6 @@ Thumbs.db
 
 # Ignore log files
 *.log
+
+# Ignore Continue files
+.continue/

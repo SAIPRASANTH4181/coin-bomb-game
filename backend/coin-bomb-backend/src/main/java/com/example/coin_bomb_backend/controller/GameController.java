@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.coin_bomb_backend.DTO.GameInitDTO;
+import com.example.coin_bomb_backend.DTO.GameStateDTO;
 import com.example.coin_bomb_backend.DTO.SquareRevealDTO;
 import com.example.coin_bomb_backend.DTO.SquareRevealRequestDTO;
 import com.example.coin_bomb_backend.model.Game;
 import com.example.coin_bomb_backend.service.GameService;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api")
@@ -26,12 +28,35 @@ public class GameController {
     private GameService gameService;
 	
 	@PostMapping("/initialize")
-	public ResponseEntity<GameInitDTO> initializeGame() {
-	    Game game = gameService.createGame(7, 7); // Create a game with 7x7 grid
-	    gameService.addBombsToGame(game, 5); // Add 5 bombs to the game
+	public ResponseEntity<GameInitDTO> initializeGame(@RequestBody String playerName) {
+	    Game game = gameService.createGame(playerName);
 	    GameInitDTO initDTO = new GameInitDTO(game.getId(), game.getWidth(), game.getHeight());
 	    return ResponseEntity.ok(initDTO);
 	}
+
+    @GetMapping("/game/{gameId}/state")
+    public ResponseEntity<GameStateDTO> getGameState(@PathVariable Long gameId) {
+        Game game = gameService.getGame(gameId);
+        GameStateDTO gameStateDTO = new GameStateDTO(
+            game.getId(),
+            game.getWidth(),
+            game.getHeight(),
+            game.getCurrentLevel(),
+            game.getScore(),
+            game.getLives(),
+            game.getTotalBombs(),
+            game.getStatus().toString(),
+            game.getPlayer().getUsername()
+        );
+        return ResponseEntity.ok(gameStateDTO);
+    }
+
+    @PostMapping("/game/{gameId}/next-level")
+    public ResponseEntity<GameInitDTO> nextLevel(@PathVariable Long gameId) {
+        Game game = gameService.nextLevel(gameId);
+        GameInitDTO initDTO = new GameInitDTO(game.getId(), game.getWidth(), game.getHeight());
+        return ResponseEntity.ok(initDTO);
+    }
 	
 
 

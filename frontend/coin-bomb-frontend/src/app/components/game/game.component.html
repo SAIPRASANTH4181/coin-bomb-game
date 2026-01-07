@@ -1,20 +1,49 @@
 <div class="game-container">
     <h1>Coin Bomb Game</h1>
-    <div class="status-bar">
-        <p *ngIf="isLoading">Loading game...</p>
-        <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
 
-        <div *ngIf="!isLoading && !errorMessage">
-            <p *ngIf="gameStatus === 'IN_PROGRESS' && grid">Find all coins! Avoid the bombs.</p>
-            <p *ngIf="gameStatus === 'WON'" class="win-msg">🎉 You Won! 🎉</p>
+    <!-- Login Screen -->
+    <div *ngIf="!isPlayerNameSet" class="login-screen">
+        <input type="text" [(ngModel)]="playerName" placeholder="Enter your name" class="name-input">
+        <button (click)="startGame()">Start Playing</button>
+        <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Game HUD -->
+    <div *ngIf="isPlayerNameSet" class="hud">
+        <div class="stat">
+            <span class="label">Player</span>
+            <span class="value">{{ playerName }}</span>
+        </div>
+        <div class="stat">
+            <span class="label">Level</span>
+            <span class="value">{{ level }}</span>
+        </div>
+        <div class="stat">
+            <span class="label">Score</span>
+            <span class="value">{{ score }}</span>
+        </div>
+        <div class="stat">
+            <span class="label">Lives</span>
+            <span class="value hearts">
+                <span *ngFor="let i of [].constructor(lives)">❤️</span>
+            </span>
+        </div>
+    </div>
+
+    <div *ngIf="isPlayerNameSet" class="status-bar">
+        <p *ngIf="isLoading">Loading...</p>
+
+        <div *ngIf="!isLoading">
+            <p *ngIf="gameStatus === 'IN_PROGRESS'">Find coins! Avoid bombs.</p>
+            <p *ngIf="gameStatus === 'WON'" class="win-msg">🎉 Level Complete! 🎉</p>
             <p *ngIf="gameStatus === 'LOST'" class="lose-msg">💥 Game Over! 💥</p>
         </div>
 
-        <button *ngIf="!grid && !isLoading" (click)="initializeGame()">Start Game</button>
-        <button *ngIf="grid && gameStatus !== 'IN_PROGRESS'" (click)="restartGame()">Restart Game</button>
+        <button *ngIf="gameStatus === 'WON'" (click)="nextLevel()" class="next-level-btn">Next Level ➡️</button>
+        <button *ngIf="gameStatus === 'LOST'" (click)="restartGame()">Try Again 🔄</button>
     </div>
 
-    <div class="game-grid" *ngIf="grid">
+    <div class="game-grid" *ngIf="grid && isPlayerNameSet">
         <div class="row" *ngFor="let row of grid; let x = index">
             <div class="square" *ngFor="let square of row; let y = index" (click)="onSquareClick(x, y)"
                 [class.revealed]="square.revealed" [class.bomb]="square.content === 'Bomb'"

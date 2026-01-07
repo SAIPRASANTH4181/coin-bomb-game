@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SquareRevealDTO, GridSquare } from 'src/app/models/game-and-square-dtos.interface';
 import { GameService } from 'src/app/services/game.service';
+import { GameStateDTO, GridSquare, SquareRevealDTO } from 'src/app/models/game-and-square-dtos.interface';
 
 @Component({
   selector: 'app-game',
@@ -9,32 +9,48 @@ import { GameService } from 'src/app/services/game.service';
 })
 export class GameComponent implements OnInit {
 
-  message: string = '';
-  level: number = 1; // Default level
-  gameData: any; // To store game data 
-  gameId: number = 0; // Initialize with a default value
-  gameWidth: number = 0;
-  gameHeight: number = 0;
-  grid: GridSquare[][] | null = null;
   gameStatus: string = 'IN_PROGRESS';
   isLoading: boolean = false;
   errorMessage: string = '';
 
+  // Game State
+  gameId: number = 0;
+  gameWidth: number = 0;
+  gameHeight: number = 0;
+  grid: GridSquare[][] | null = null;
+
+  // Player & Progression
+  playerName: string = '';
+  isPlayerNameSet: boolean = false;
+  level: number = 1;
+  score: number = 0;
+  lives: number = 3;
+  totalBombs: number = 0;
+
   constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
+    // Wait for player name
+  }
+
+  startGame(): void {
+    if (!this.playerName.trim()) {
+      this.errorMessage = 'Please enter your name!';
+      return;
+    }
+    this.isPlayerNameSet = true;
     this.initializeGame();
   }
 
   initializeGame(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.gameService.initializeGame().subscribe({
+    this.gameService.initializeGame(this.playerName).subscribe({
       next: (response) => {
         this.gameId = response.id;
         this.gameWidth = response.width;
         this.gameHeight = response.height;
-        this.gameStatus = 'IN_PROGRESS';
+        this.updateGameState(); // Fetch full state
         this.createGrid();
         this.isLoading = false;
       },
@@ -42,6 +58,18 @@ export class GameComponent implements OnInit {
         console.error('Error initializing game', error);
         this.errorMessage = 'Could not start game. Is the backend running?';
         this.isLoading = false;
+      }
+    });
+  }
+
+  updateGameState(): void {
+    this.gameService.getGameState(this.gameId).subscribe({
+      next: (state: GameStateDTO) => {
+        this.level = state.level;
+        this.score = state.score;
+        this.lives = state.lives;
+        this.totalBombs = state.totalBombs;
+        this.gameStatus = state.status;
       }
     });
   }
@@ -64,7 +92,9 @@ export class GameComponent implements OnInit {
           if (this.grid && this.grid[x] && this.grid[x][y]) {
             this.grid[x][y].revealed = true;
             this.grid[x][y].content = response.content;
-            this.gameStatus = response.gameStatus;
+
+            // Update full state to sync lives/score
+            this.updateGameState();
           }
         },
         error: (error) => console.error('Error revealing square', error)
@@ -72,8 +102,24 @@ export class GameComponent implements OnInit {
     }
   }
 
+  nextLevel(): void {
+    this.isLoading = true;
+    this.gameService.nextLevel(this.gameId).subscribe({
+      next: (response) => {
+        this.gameWidth = response.width;
+        this.gameHeight = response.height;
+        this.createGrid();
+        this.updateGameState();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      }
+    });
+  }
+
   restartGame(): void {
     this.initializeGame();
   }
-
 }

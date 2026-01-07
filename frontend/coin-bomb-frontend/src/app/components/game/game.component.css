@@ -17,7 +17,7 @@
   border-radius: 20px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  max-width: 600px;
+  max-width: 800px;
   width: 100%;
 }
 
@@ -32,6 +32,64 @@ h1 {
   letter-spacing: -1px;
 }
 
+/* HUD Styles */
+.hud {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat .label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #a0aec0;
+  letter-spacing: 1px;
+}
+
+.stat .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.hearts {
+  color: #ef4444;
+}
+
+/* Login Screen */
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.name-input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+/* Status Bar */
 .status-bar {
   margin-bottom: 2rem;
   min-height: 60px;
@@ -64,13 +122,17 @@ button {
   background: linear-gradient(45deg, #3b82f6, #2563eb);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   font-weight: 600;
   margin-top: 10px;
+}
+
+button.next-level-btn {
+  background: linear-gradient(45deg, #10b981, #059669);
 }
 
 button:hover {
@@ -131,7 +193,6 @@ button:active {
 }
 
 .square.bomb {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
   background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
 }
 

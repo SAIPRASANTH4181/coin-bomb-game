@@ -24,3 +24,15 @@ export interface SquareDTO {
   isRevealed: boolean;
   content: string | null; // null if not revealed, otherwise 'B', 'C', etc.
 }
+
+export interface GameStateDTO {
+  gameId: number;
+  width: number;
+  height: number;
+  level: number;
+  score: number;
+  lives: number;
+  totalBombs: number;
+  status: string;
+  playerName: string;
+}
