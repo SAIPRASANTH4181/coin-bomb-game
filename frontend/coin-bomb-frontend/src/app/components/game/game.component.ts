@@ -161,4 +161,8 @@ export class GameComponent implements OnInit {
       }
     });
   }
+
+  goToLanding(): void {
+    this.router.navigate(['/landing']);
+  }
 }

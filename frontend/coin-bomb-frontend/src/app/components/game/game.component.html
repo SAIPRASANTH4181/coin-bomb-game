@@ -7,7 +7,7 @@
         <button (click)="startGame()">Start Playing</button>
         <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
         <p class="auth-links">
-            Want to save your scores? <a routerLink="/landing">Choose authentication option</a>
+            Want to save your scores? <a (click)="goToLanding()" href="#">Choose authentication option</a>
         </p>
     </div>
 
