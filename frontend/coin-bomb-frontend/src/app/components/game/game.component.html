@@ -1,14 +1,13 @@
 <div class="game-container">
     <h1>Coin Bomb Game</h1>
 
-    <!-- Login Screen -->
+    <!-- Login Screen for Anonymous Users (Fallback) -->
     <div *ngIf="!isPlayerNameSet" class="login-screen">
         <input type="text" [(ngModel)]="playerName" placeholder="Enter your name" class="name-input">
         <button (click)="startGame()">Start Playing</button>
         <p *ngIf="errorMessage" class="lose-msg">{{ errorMessage }}</p>
         <p class="auth-links">
-            <a routerLink="/signin">Login</a> | 
-            <a routerLink="/signup">Sign Up</a>
+            Want to save your scores? <a routerLink="/landing">Choose authentication option</a>
         </p>
     </div>
 
@@ -32,7 +31,7 @@
                 <span *ngFor="let i of [].constructor(lives)">❤️</span>
             </span>
         </div>
-        <div class="stat">
+        <div class="stat" *ngIf="authService.getUser()">
             <button (click)="logout()" class="btn btn-secondary">Logout</button>
         </div>
     </div>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { GameStateDTO, GridSquare, SquareRevealDTO, GameInitDTO } from 'src/app/models/game-and-square-dtos.interface';
 
 @Component({
@@ -32,7 +32,8 @@ export class GameComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -42,6 +43,15 @@ export class GameComponent implements OnInit {
       this.playerName = user.username;
       this.isPlayerNameSet = true;
       this.initializeGame();
+    } else {
+      // Check for anonymous player name in query params
+      this.route.queryParams.subscribe(params => {
+        if (params['name']) {
+          this.playerName = params['name'];
+          this.isPlayerNameSet = true;
+          this.initializeGame();
+        }
+      });
     }
   }
 
@@ -140,14 +150,14 @@ export class GameComponent implements OnInit {
       next: () => {
         this.isPlayerNameSet = false;
         this.playerName = '';
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/landing']);
       },
       error: (err: any) => {
         console.error('Logout error', err);
-        // Even if there's an error, still redirect to login page
+        // Even if there's an error, still redirect to landing page
         this.isPlayerNameSet = false;
         this.playerName = '';
-        this.router.navigate(['/signin']);
+        this.router.navigate(['/landing']);
       }
     });
   }
