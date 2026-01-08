@@ -53,7 +53,7 @@ export class SignupComponent implements OnInit {
       },
       error: (err: any) => {
         this.errorMessage = err.error?.message || 'Registration failed';
-        this.isSignUp
+        this.isSignUpFailed = true;
       }
     });
   }

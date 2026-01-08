@@ -31,7 +31,7 @@ export class GameComponent implements OnInit {
 
   constructor(
     private gameService: GameService,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
